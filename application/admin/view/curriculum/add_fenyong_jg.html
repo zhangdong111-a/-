@@ -1,0 +1,91 @@
+{include file="public/header" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>选择机构</h5>
+        </div>
+        <div class="ibox-content">
+            <!--搜索框开始-->           
+            <div class="row">
+                <div  class="col-sm-2" style="width: 100px">
+                    <div class="input-group" >  
+                        <a href="javascript:history.go(-1);"><button class="btn btn-outline btn-primary" type="button">返回</button></a>
+                    </div>
+                </div>  
+                <div  class="col-sm-2" style="width: 100px">
+                    <div class="input-group" >  
+                        <button type="button" class="btn btn-outline btn-primary" onclick="pldel({$kcid})">保存机构</button>
+                    </div>
+                </div>  
+            </div>
+            <!--搜索框结束-->
+            <div class="hr-line-dashed"></div>
+            <div class="example-wrap">
+                <div class="example">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr class="long-tr">
+                                <th width="5%"><input type="checkbox" id="all"></th>
+                                <th>机构名称</th>
+                            </tr>
+                        </thead>
+                        {volist name="jigou" id="vo"}
+                            <tr class="long-td">
+                                <td><input type="checkbox" name="id" value="{$vo.id}"></td>
+                                <td>{$vo.title}</td>
+                            </tr>
+                        {/volist}
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{include file="public/footer" /}
+
+<script>
+    $("#all").on('click',function() {
+        $("input[name='id']").prop("checked", this.checked);
+    });
+    
+    function pldel(kcid) {
+        var ids = '';
+        $('input[name="id"]').each(function(){
+            if(this.checked == true){
+                ids += this.value + ',';
+            }
+        });
+        
+        if(ids){
+            var url = '{:url("add_fenyong")}';
+            layer.confirm('确认操作吗?', {icon: 3, title:'提示'}, function(index){
+                $.ajax({
+                    url:url,
+                    data:{
+                        ids:ids,kcid:kcid
+                    },success:function (res) {
+                        if(res.code == 1){
+                            layer.msg(res.msg,{icon:1,time:1000,shade: 0.1});
+                            setTimeout(function () {
+                                window.location.href='javascript:history.go(-1);';
+                            },2000)
+                        }else{
+                            layer.msg(res.msg,{icon:0,time:1500,shade: 0.1});
+                        }
+                    }
+                })
+            })
+        }else{
+            layer.msg("请选择机构", {icon: 5,time:1500,shade: 0.1});
+            return false;
+        }
+    }
+</script>
+
+</body>
+</html>

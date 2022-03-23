@@ -1,0 +1,225 @@
+{include file="public/header" /}
+<link rel="stylesheet" type="text/css" href="/static/admin/webupload/webuploader.css">
+<link rel="stylesheet" type="text/css" href="/static/admin/webupload/style.css">
+<style>
+    .file-item {
+        float: left;
+        position: relative;
+        width: 110px;
+        height: 110px;
+        margin: 0 20px 20px 0;
+        padding: 4px;
+    }
+
+    .file-item .info {
+        overflow: hidden;
+    }
+
+    .uploader-list {
+        width: 100%;
+        overflow: hidden;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>订单详情</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" name="add" id="add" method="post" action="edit_place">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单号：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.orderId}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">课程名称：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.kc_name}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">购买人：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.student_name}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">价格类型：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.price_type}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">价格：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.price}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">培训方式：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.method}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">分销机构：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.place_name}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">付款渠道：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{if condition='$info.pay_channel eq 1'}微信{else /}后台创建{/if}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">付款状态：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.pay_status}" readonly>
+                            </div>
+                        </div>
+<!--                        <div class="hr-line-dashed"></div>-->
+<!--                        <div class="form-group">-->
+<!--                            <label class="col-sm-3 control-label">下单时间：</label>-->
+<!--                            <div class="input-group col-sm-4">-->
+<!--                                <input  type="text" class="form-control" value="{$info.time}" readonly>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">付款时间：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.pay_time}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">退款金额：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.tk_money}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">补交金额：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.bj_money}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">取消报名：</label>
+                            <div class="input-group col-sm-4">
+                                <input  type="text" class="form-control" value="{$info.pay_status}" readonly>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+                                <a class="btn btn-danger" href="javascript:history.go(-1);"><i class="fa fa-close"></i>
+                                    返回</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{include file="public/footer" /}
+
+<script type="text/javascript" src="/static/admin/webupload/webuploader.min.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        $('#add').ajaxForm({
+            beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+            success: complete, // 这是提交后的方法
+            dataType: 'json'
+        });
+
+        function checkForm() {
+            if ('' == $.trim($('#title').val())) {
+                layer.msg('分销机构名称不能为空', {icon: 5, time: 1500, shade: 0.1}, function (index) {
+                    layer.close(index);
+                });
+                return false;
+            }
+            if ('' == $.trim($('#name').val())) {
+                layer.msg('联系人姓名不能为空', {icon: 5, time: 1500, shade: 0.1}, function (index) {
+                    layer.close(index);
+                });
+                return false;
+            }
+            if ('' == $.trim($('#mobile').val())) {
+                layer.msg('联系人电话不能为空', {icon: 5, time: 1500, shade: 0.1}, function (index) {
+                    layer.close(index);
+                });
+                return false;
+            }
+            if ('' == $.trim($('#password').val())) {
+                layer.msg('登录密码不能为空', {icon: 5, time: 1500, shade: 0.1}, function (index) {
+                    layer.close(index);
+                });
+                return false;
+            }
+        }
+
+        function complete(data) {
+            if (data.code == 1) {
+                layer.msg(data.msg, {icon: 6, time: 1500, shade: 0.1}, function (index) {
+                    layer.close(index);
+                    window.location.href = "{:url('place/index')}";
+                });
+            } else {
+                layer.msg(data.msg, {icon: 5, time: 1500, shade: 0.1}, function (index) {
+                    layer.close(index);
+                });
+                return false;
+            }
+        }
+
+    });
+
+
+    //IOS开关样式配置
+    var elem = document.querySelector('.js-switch');
+    var switchery = new Switchery(elem, {
+        color: '#1AB394'
+    });
+    var config = {
+        '.chosen-select': {},
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+
+</script>
+</body>
+</html>

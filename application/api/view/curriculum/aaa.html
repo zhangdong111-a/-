@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>轮回博客</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="renderer" content="webkit">
+        <script src="/static/home/js/jquery.min.js"></script>
+    </head>
+<body id="blog">
+
+
+    <input id="new" type="button" name="liuyan" id="liuyan" value="支付100元马上预约" onclick="tj()" style="text-indent: 0px;">
+<div class="am-g am-g-fixed blog-fixed">
+    <div class="am-u-md-8 am-u-sm-12">
+        <hr>
+
+<script>
+    function tj() {
+        $.ajax({
+            type: "POST",
+            url: "{:url('curriculum/bbb')}",
+            dataType: "json",
+            success: function(data) {
+                jsApiCall(JSON.parse(data));
+            },
+            error: function(jqXHR) {
+                alert("购买失败");
+            }
+        })
+    }
+
+    function jsApiCall(jsApiParameters) {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', jsApiParameters, function(res) {
+            WeixinJSBridge.log(res.err_msg);
+
+            if (res.err_msg == "get_brand_wcpay_request:fail") {
+                alert("支付失败");
+                window.location.href = "http://peixun.daru.xin/h5";
+            }
+
+            if (res.err_msg == "get_brand_wcpay_request:cancel") {
+                alert("支付已取消");
+            }
+
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+                window.location.href = "http://peixun.daru.xin/h5";
+            }
+        });
+    }
+</script>

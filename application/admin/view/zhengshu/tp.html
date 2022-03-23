@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+{include file="public/header" /}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        #name {
+            font-size: 14px;
+            position: absolute;
+            display: block;
+            color: red;
+            /*margin-bottom: 30px;*/
+        }
+
+        #sex {
+            font-size: 14px;
+            position: absolute;
+            display: block;
+            top: 20px;
+            color: red;
+        }
+
+        #parent {
+            width: 600px;
+            border: 1px solid #CDCDCD;
+            position: relative;
+            margin: 0 auto;
+            background-color: #F4F4F4;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .postText {
+            width: 600px;
+            height: 30px;
+            margin: 0 auto;
+            background-color: #F4F4F4;
+        }
+
+        .postText span {
+            padding: 0px 10px;
+        }
+
+        a {
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        canvas {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .btn {
+            background-color: #1ab394;
+            width: 200px;
+            height: 40px;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+            display: block;
+            margin: 20px auto;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<button class="btn btn-outline btn-primary" type="button" onclick="goNext()" style="color: #fff;">批量生成</button>
+<div id="parent">
+    <a href="#" id="name" onmousemove="posMove(this.id,0)">张三</a>
+    <a href="#" id="sex" onmousemove="posMove(this.id,1)">66</a>
+    <img src="/uploads/images/{$kc.zhengshu_img}">
+</div>
+<canvas id="myCanvas" width="1100" height="1600"></canvas>
+{include file="public/footer" /}
+<script src="/static/admin/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var txtLeft = ''
+    var txtLeft1 = ''
+    var txtTop = ''
+    var txtTop1 = ''
+
+    function posMove(getdivid, num) {
+        var oDiv = document.getElementById(getdivid);
+        var oParent = document.getElementById('parent');
+        var sent = {
+            l: 10, //设置div在父元素的活动范围，10相当于给父div设置padding-left：10;
+            r: oParent.offsetWidth - oDiv.offsetWidth, // offsetWidth:当前对象的宽度， offsetWidth = width+padding+border
+            t: 10,
+            b: oParent.offsetHeight - oDiv.offsetHeight,
+            n: 10
+        }
+        drag(oDiv, sent, num);
+    }
+
+    /**
+     *
+     * @param obj:被拖动的div
+     * @param sent :设置div在容器中可以被拖动的区域
+     */
+    function drag(obj, sent, num) {
+        var dmW = document.documentElement.clientWidth || document.body.clientWidth;
+        var dmH = document.documentElement.clientHeight || document.body.clientHeight;
+        var sent = sent || {};
+        var l = sent.l || 0;
+        var r = sent.r || dmW - obj.offsetWidth;
+        var t = sent.t || 0;
+        var b = sent.b || dmH - obj.offsetHeight;
+        var n = sent.n || 10;
+        obj.onmousedown = function (ev) {
+            var oEvent = ev || event;
+            var sentX = oEvent.clientX - obj.offsetLeft;
+            var sentY = oEvent.clientY - obj.offsetTop;
+            document.onmousemove = function (ev) {
+                var oEvent = ev || event;
+                var slideLeft = oEvent.clientX - sentX;
+                var slideTop = oEvent.clientY - sentY;
+                if (slideLeft <= l) {
+                    slideLeft = l;
+                }
+                if (slideLeft >= r) {
+                    slideLeft = r;
+                }
+                if (slideTop <= t) {
+                    slideTop = t;
+                }
+                if (slideTop >= b) {
+                    slideTop = b;
+                }
+
+                obj.style.left = slideLeft + 'px';
+                obj.style.top = slideTop + 'px';
+                if (num == 0) {
+                    txtLeft = slideLeft
+                    txtTop = slideTop
+                } else if (num == 1) {
+                    txtLeft1 = slideLeft
+                    txtTop1 = slideTop
+                }
+
+            };
+            document.onmouseup = function () {
+                document.onmousemove = null;
+                document.onmouseup = null;
+            }
+
+            return false;
+        }
+    }
+
+    function goNext() {
+        layer.confirm('确认批量生成吗?', {icon: 3, title: '提示'}, function (index) {
+            var num1 = 0
+            var len = 0
+            $.ajax({
+                type: "post",
+                url: "{:url('zhengshu/xy')}",
+                data: {
+                    kcid: '{$kc.id}'
+                },
+                traditional: true,
+                success: function (res) {
+                    len = res.length
+                    for (let i = 0; i < res.length; i++) {
+                        drawImg(res[i].studentname, res[i].fenshu, res[i].id)
+                    }
+                }
+            });
+
+            function drawImg(name, num, id) {
+                var canvas = $('#myCanvas')[0];
+                var ctx = canvas.getContext("2d");
+                var imgObj = new Image();
+                imgObj.src = "/uploads/images/{$kc.zhengshu_img}" //原图像大小1000×1419
+                imgObj.onload = function () {
+                    ctx.drawImage(this, 0, 0, 1100, 1600); //this即imgObj,200,300指改变图片的大小
+                    ctx.font = "26px SimHei";
+                    ctx.fillText(num, txtLeft1 * 1.85, txtTop1 * 2 - 8);
+                    ctx.font = "26px SimHei";
+                    ctx.fillText(name, txtLeft * 1.8 + 2, txtTop * 2 + 4);
+                    var src = canvas.toDataURL("image/jpeg");
+                    $.ajax({
+                        type: "post",
+                        url: "{:url('zhengshu/zhengshuimg')}",
+                        data: {
+                            id: id,
+                            img: src
+                        },
+                        traditional: true,
+                        success: function (res1) {
+                            num1++
+                            if (res1.code == 1 && len == num1) {
+                                alert('生成成功！~~~~')
+                                window.location.href = "{:url('zhengshu/index')}"
+                            }
+                        }
+                    });
+                }
+            }
+            layer.close(index);
+        })
+    }
+</script>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/admin/layui/css/layui.css">
+    <style>
+       .tijiao{
+           width: 80px;height: 35px;background-color: #007cc2;border: none;color: #fff;border-radius: 5px;float: right;margin-top: 150px;
+       }
+    </style>
+</head>
+<body>
+<div style='width: 85%;margin: 0 auto;margin-top: 20px;'>
+<!--    <span style="font-size: 16px;margin-right: 15px;float: left;display: block;width: 80px;">上传文件：</span>-->
+<!--    <button type="button" class="layui-btn" id="test4"><i class="layui-icon"></i>选择文件</button>-->
+<!--    <p id="demo" style="float: left;overflow: hidden"></p>-->
+<!--    <button class="layui-btn tijiao" style="float: right;margin-top: 40%;width: 90px;">提交</button>-->
+<!--    <input type="hidden" class="file" value="">-->
+
+    <form action="{:url('daoru')}" id="add" method="post" enctype="multipart/form-data">
+        选择文件：<input type="file" name="file">
+        <input type="hidden" id="id" name="id" value="{$id}">
+        <input type="submit" value="上传" class="tijiao">
+    </form>
+</div>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="__JS__/layer/layer.js"></script>
+<script src="/static/admin/js/jquery.form.js"></script>
+<script type="text/javascript" src="/static/admin/webupload/webuploader.min.js"></script>
+<script>
+    $(function(){
+        $('#add').ajaxForm({
+            beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+            success: complete, // 这是提交后的方法
+            dataType: 'json'
+        });
+
+        function checkForm(){
+
+        }
+
+        function complete(data){
+            if(data.code == 1){
+                layer.msg(data.msg, {icon: 6,time:1500,shade: 0.1}, function(index){
+                    layer.close(index);
+                    var index = parent.layer.getFrameIndex(window.name);//获取当前iframe层的索引
+                    parent.layer.close(index);//执行关闭
+                    window.parent.location.reload();//刷新父页面
+                });
+            }else{
+                layer.msg(data.msg, {icon: 5,time:1500,shade: 0.1}, function(index){
+                    layer.close(index);
+                });
+                return false;
+            }
+        }
+
+    });
+</script>
+
+</body>
+</html>

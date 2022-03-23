@@ -1,0 +1,132 @@
+{include file="public/header" /}
+<style>
+    #place_id{
+        height: 32px;
+        border: 1px solid #e5e6e7;
+        width: 260px;
+        padding-left: 10px;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>订单详情</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="hr-line-dashed"></div>
+            <div class="example-wrap">
+                <div class="example">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr class="long-tr">
+                                <th>ID</th>
+                                <th>课程名称</th>
+                                <th>姓名</th>
+                                <th>价格类型</th>
+                                <th>价格</th>
+                                <th>退款金额</th>
+                                <th>手续费</th>
+                            </tr>
+                        </thead>
+                        <script id="list-template" type="text/html">
+                            {{# for(var i=0;i<d.length;i++){  }}
+                                <tr class="long-td">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{d[i].kcname}}</td>
+                                    <td>{{d[i].student_name}}</td>
+                                    <td>{{d[i].price_type}}</td>
+                                    <td>{{d[i].price}}</td>
+                                    <td>{{d[i].tk_money}}</td>
+                                    <td>{{d[i].sxf}}</td>
+                                </tr>
+                            {{# } }}
+                        </script>
+                        <tbody id="list-content"></tbody>
+                    </table>
+                    <div id="AjaxPage" style="text-align:right;"></div>
+                    <div style="text-align: right;">
+                        共{$count}条数据，<span id="allpage"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 加载动画 -->
+<div class="spiner-example">
+    <div class="sk-spinner sk-spinner-three-bounce">
+        <div class="sk-bounce1"></div>
+        <div class="sk-bounce2"></div>
+        <div class="sk-bounce3"></div>
+    </div>
+</div>
+
+{include file="public/footer" /}
+
+<script type="text/javascript">
+   
+    /**
+     * [Ajaxpage laypage分页]
+     * @param {[type]} curr [当前页]
+     */
+    Ajaxpage();
+
+    function Ajaxpage(curr){
+        var key=$('#key').val();
+        var id = "{$id}";
+        $.getJSON('{:url("order/order_info")}', {
+            page: curr || 1,key:key,id:id
+        }, function(data){      //data是后台返回过来的JSON数据
+            $(".spiner-example").css('display','none'); //数据加载完关闭动画
+            if(data==''){
+                $("#list-content").html('<td colspan="20" style="padding-top:10px;padding-bottom:10px;font-size:16px;text-align:center">暂无数据</td>');
+            }else{
+                var tpl = document.getElementById('list-template').innerHTML;
+                laytpl(tpl).render(data, function(html){
+                    document.getElementById('list-content').innerHTML = html;
+                });
+                laypage({
+                    cont: $('#AjaxPage'),//容器。值支持id名、原生dom对象，jquery对象,
+                    pages:'{$allpage}',//总页数
+                    skip: true,//是否开启跳页
+                    skin: '#1AB5B7',//分页组件颜色
+                    curr: curr || 1,
+                    groups: 3,//连续显示分页数
+                    jump: function(obj, first){
+                        if(!first){
+                            Ajaxpage(obj.curr)
+                        }
+                        $('#allpage').html('第'+ obj.curr +'页，共'+ obj.pages +'页');
+                    }
+                });
+            }
+        });
+    }
+    //查看详情
+    function order_info(id){
+        location.href = './order_info/id/'+id+'.html';
+    }
+
+    //退补列表
+    function tblist(id){
+        location.href = './tblist/id/'+id+'.html';
+    }
+
+    //退款
+    function tuikuan(id){
+        location.href = './tuikuan/id/'+id+'.html';
+    }
+
+    //取消报名
+    function qxbm(id){
+        location.href = './qxbm/id/'+id+'.html';
+    }
+
+
+</script>
+
+</body>
+</html>
